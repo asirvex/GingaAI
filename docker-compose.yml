@@ -1,0 +1,14 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./claims.db
+      - LOG_LEVEL=INFO
+    volumes:
+      - claim-data:/app
+    restart: unless-stopped
+
+volumes:
+  claim-data:
