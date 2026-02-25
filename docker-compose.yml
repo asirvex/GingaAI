@@ -4,10 +4,13 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=sqlite:///./claims.db
+      - DATABASE_URL=sqlite+aiosqlite:///./data/claims.db
+      - API_KEY=dev-test-api-key
       - LOG_LEVEL=INFO
     volumes:
-      - claim-data:/app
+      - ./app:/app/app        # live-reload source code
+      - claim-data:/app/data  # persist DB across restarts
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     restart: unless-stopped
 
 volumes:

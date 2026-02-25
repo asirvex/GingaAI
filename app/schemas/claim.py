@@ -31,3 +31,11 @@ class ClaimDetailResponse(ClaimResponse):
     updated_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class PaginatedClaimsResponse(BaseModel):
+    items: list[ClaimDetailResponse]
+    total: int
+    page: int
+    page_size: int
+    pages: int
