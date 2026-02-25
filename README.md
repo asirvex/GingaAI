@@ -2,6 +2,21 @@
 
 A minimal REST API that simulates health insurance claim submission and adjudication, built with **Python 3.12**, **FastAPI**, and **async SQLAlchemy**.
 
+**Live API:** https://gingaai.onrender.com
+
+---
+
+## Testing the Live API
+
+The easiest way to test is via the interactive docs:
+
+1. Open **https://gingaai.onrender.com/docs**
+2. Click the **lock icon** (🔒) in the top right
+3. Enter `dev-test-api-key` and click **Authorize**
+4. You can now make requests directly from the browser
+
+> **Note:** The service is hosted on Render's free tier and may take ~30 seconds to respond after a period of inactivity (cold start).
+
 ---
 
 ## Architecture Decisions
@@ -48,8 +63,8 @@ python -m alembic upgrade head
 uvicorn app.main:app --reload
 ```
 
-The API is available at `http://localhost:8000`.
-Interactive docs: `http://localhost:8000/docs`
+The API is available at `https://gingaai.onrender.com`.
+Interactive docs: `https://gingaai.onrender.com/docs`
 
 ### Option 2 — Docker
 
@@ -86,7 +101,7 @@ All `/claims` endpoints require the `X-API-Key` header.
 ### Submit a Claim (APPROVED)
 
 ```bash
-curl -X POST http://localhost:8000/claims \
+curl -X POST https://gingaai.onrender.com/claims \
   -H "Content-Type: application/json" \
   -H "X-API-Key: dev-test-api-key" \
   -d '{
@@ -112,7 +127,7 @@ Response (`201`):
 ### Submit a Claim (PARTIAL + fraud flag)
 
 ```bash
-curl -X POST http://localhost:8000/claims \
+curl -X POST https://gingaai.onrender.com/claims \
   -H "Content-Type: application/json" \
   -H "X-API-Key: dev-test-api-key" \
   -d '{
@@ -138,7 +153,7 @@ Response (`201`):
 ### Submit a Claim (REJECTED — inactive member)
 
 ```bash
-curl -X POST http://localhost:8000/claims \
+curl -X POST https://gingaai.onrender.com/claims \
   -H "Content-Type: application/json" \
   -H "X-API-Key: dev-test-api-key" \
   -d '{
@@ -166,19 +181,19 @@ Response (`201`):
 ```bash
 # All claims, page 1
 curl -H "X-API-Key: dev-test-api-key" \
-  "http://localhost:8000/claims?page=1&page_size=10"
+  "https://gingaai.onrender.com/claims?page=1&page_size=10"
 
 # Filter by member
 curl -H "X-API-Key: dev-test-api-key" \
-  "http://localhost:8000/claims?member_id=M123"
+  "https://gingaai.onrender.com/claims?member_id=M123"
 
 # Filter by status
 curl -H "X-API-Key: dev-test-api-key" \
-  "http://localhost:8000/claims?status=REJECTED"
+  "https://gingaai.onrender.com/claims?status=REJECTED"
 
 # Filter by fraud flag
 curl -H "X-API-Key: dev-test-api-key" \
-  "http://localhost:8000/claims?fraud_flag=true"
+  "https://gingaai.onrender.com/claims?fraud_flag=true"
 ```
 
 Response:
@@ -196,13 +211,13 @@ Response:
 
 ```bash
 curl -H "X-API-Key: dev-test-api-key" \
-  http://localhost:8000/claims/{claim_id}
+  https://gingaai.onrender.com/claims/{claim_id}
 ```
 
 ### Health Check (no auth required)
 
 ```bash
-curl http://localhost:8000/health
+curl https://gingaai.onrender.com/health
 ```
 
 ---
@@ -230,7 +245,7 @@ python -m alembic downgrade -1
 - **Observability**: Structured JSON logging, OpenTelemetry traces, Prometheus metrics.
 - **CI/CD**: GitHub Actions pipeline with lint (ruff), type-check (mypy), test, and Docker build stages.
 - **Input sanitization**: Additional validation on code formats (regex patterns for ICD/CPT codes).
-- **JWT authentication**: Replace API key with JWT for role-based access control.
+- **JWT authentication**: Add JWT authentication for role-based access control.
 
 ---
 
